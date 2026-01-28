@@ -89,10 +89,19 @@ for /f "tokens=1* delims=." %%a in ("%TEMP_NAME%") do (
 set "PADDING=%LAST_PART%"
 
 :: Validate padding (should be all digits)
+if not defined PADDING (
+    echo ERROR: Unable to parse padding from filename.
+    echo Expected format: {name}.{padding}.{extension}
+    echo Example: shot_01.0001.exr
+    echo Received: "%FULL_FILENAME%"
+    pause
+    exit /b 1
+)
+
 echo %PADDING%| findstr /r "^[0-9][0-9]*$" >nul
 if errorlevel 1 (
     echo ERROR: Unable to parse padding from filename.
-    echo Expected format: {name}.{padding}{extension}
+    echo Expected format: {name}.{padding}.{extension}
     echo Example: shot_01.0001.exr
     echo Received: "%FULL_FILENAME%"
     pause
@@ -133,12 +142,12 @@ echo Starting FFmpeg conversion...
 echo ----------------------------------------
 echo Command details:
 echo   Frame rate: 24 FPS
-echo   Codec: ProRes Proxy (profile:v 1)
+echo   Codec: ProRes Proxy (profile:v 0)
 echo   Color space: BT.709
 echo ----------------------------------------
 echo.
 
-ffmpeg -framerate 24 -i "%INPUT_PATTERN%" -vf "setparams=color_trc=bt709:color_primaries=bt709:colorspace=bt709" -c:v prores -profile:v 1 -y "%OUTPUT_FILE%" > "%LOG_FILE%" 2>&1
+ffmpeg -framerate 24 -i "%INPUT_PATTERN%" -c:v prores -profile:v 0 -color_trc bt709 -color_primaries bt709 -colorspace bt709 -y "%OUTPUT_FILE%" > "%LOG_FILE%" 2>&1
 
 :: Check FFmpeg exit code
 if errorlevel 1 (

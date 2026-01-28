@@ -10,7 +10,7 @@ This tool provides a simple drag-and-drop workflow for converting image sequence
 
 - **Drag-and-Drop Interface**: Simply drag the first image of your sequence onto the script
 - **Automatic Pattern Detection**: Intelligently parses filenames following the `{name}.{padding}.{extension}` convention
-- **ProRes Proxy Output**: Generates lightweight ProRes Proxy files (profile 1) perfect for editorial review
+- **ProRes Proxy Output**: Generates lightweight ProRes Proxy files (profile 0) perfect for editorial review
 - **BT.709 Color Space**: Applies industry-standard color space settings
 - **Error Handling**: Comprehensive error checking with detailed logging
 - **Clean Output**: Automatically deletes logs on success, preserves them on failure
@@ -77,7 +77,7 @@ The script uses the following FFmpeg parameters:
 
 - **Frame Rate**: 24 FPS
 - **Codec**: ProRes (prores)
-- **Profile**: 1 (ProRes Proxy)
+- **Profile**: 0 (ProRes Proxy)
 - **Color Settings**:
   - Transfer Characteristics: BT.709
   - Color Primaries: BT.709
@@ -137,9 +137,9 @@ If the conversion fails:
 
 Edit the script and change the `-profile:v` parameter:
 - 0 = ProRes Proxy (smallest file size)
-- 1 = ProRes LT
-- 2 = ProRes Standard
-- 3 = ProRes HQ (highest quality)
+- 1 = ProRes LT (low throughput)
+- 2 = ProRes 422 (standard quality)
+- 3 = ProRes 422 HQ (high quality)
 
 ## Technical Details
 
@@ -172,8 +172,8 @@ The `%04d` tells FFmpeg to look for 4-digit zero-padded frame numbers.
 To modify the script for your pipeline:
 
 1. **Frame Rate**: Change `-framerate 24` to your desired rate
-2. **ProRes Profile**: Change `-profile:v 1` to 0, 2, or 3
-3. **Color Space**: Modify the `setparams` filter values
+2. **ProRes Profile**: Change `-profile:v 0` to 1, 2, or 3 for higher quality
+3. **Color Space**: Modify the `-color_trc`, `-color_primaries`, and `-colorspace` parameters
 4. **Output Location**: Change `set "OUTPUT_FILE=%BASE_NAME%.mov"` to include a different path
 
 ## License
