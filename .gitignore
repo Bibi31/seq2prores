@@ -1,0 +1,15 @@
+# Conversion log files
+conversion_log.txt
+
+# Output video files (optional - uncomment if you don't want to track .mov files)
+# *.mov
+
+# Windows temporary files
+Thumbs.db
+Desktop.ini
+
+# macOS files
+.DS_Store
+
+# Test files
+test_*.bat
